@@ -59,6 +59,119 @@
     "noveltyKey": "itemId|version",
     "retryFailed": "newUrlOnly"
   },
+  "pipeline": [
+    {
+      "step": "detect",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-detect@v0.1.0",
+      "params": {
+        "annoFrom": "${source.config.annoFrom}",
+        "annoTo": "${source.config.annoTo}",
+        "ids": "${source.config.ids}",
+        "maxDocs": "${source.config.maxDocs}",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "verifyTls": "${source.config.verifyTls}",
+        "delaySeconds": "${source.config.delaySeconds}",
+        "baseUrl": "${source.config.baseUrl}",
+        "state": "${source.state}",
+        "refreshToken": "${source.config.refreshToken}"
+      },
+      "emits": "catalog",
+      "retry": { "type": "exponential", "maxAttempts": 3, "interval": "PT5M" },
+      "timeout": "PT10M"
+    },
+    {
+      "step": "grab",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-grab@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "concurrencyLimit": 1,
+      "params": {
+        "items": "${items}",
+        "dir": "${dataRoot}/dp-sk-judikatura/${source.id}/raw",
+        "ids": "${source.config.ids}",
+        "maxDocs": "${source.config.maxDocs}",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "verifyTls": "${source.config.verifyTls}",
+        "delaySeconds": "${source.config.delaySeconds}",
+        "baseUrl": "${source.config.baseUrl}"
+      },
+      "retry": { "type": "fixed", "maxAttempts": 2, "interval": "PT2M" },
+      "timeout": "PT2H",
+      "allowedHosts": ["www.nsud.sk"]
+    },
+    {
+      "step": "convert",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-convert@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "params": {
+        "items": "${items}",
+        "dirIn": "${dataRoot}/dp-sk-judikatura/${source.id}/raw",
+        "dirOut": "${dataRoot}/dp-sk-judikatura/${source.id}/plan",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "maxDocs": "${source.config.maxDocs}",
+        "ids": "${source.config.ids}"
+      },
+      "resources": {
+        "maxMemoryMbytes": 3072,
+        "cpuLimit": 2
+      },
+      "timeout": "PT2H",
+      "heartbeatMaxSeconds": 900
+    },
+    {
+      "step": "ingest",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-ingest@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "db": "dataset",
+      "params": {
+        "items": "${items}",
+        "dirIn": "${dataRoot}/dp-sk-judikatura/${source.id}/plan",
+        "connString": "${dataset.connString}",
+        "schema": "ds_sk_judikatura"
+      },
+      "timeout": "PT1H",
+      "produces": [
+        "ds_sk_judikatura.rozhodnutia",
+        "ds_sk_judikatura.passages",
+        "ds_sk_judikatura.skipped",
+        "ds_sk_judikatura.coverage"
+      ]
+    },
+    {
+      "step": "embed",
+      "class": "git:github.com/0ics-srls/dp-lex-embed@dp-p7.1",
+      "perItem": true,
+      "chunkSize": 1,
+      "concurrencyLimit": 1,
+      "db": "dataset",
+      "secrets": ["JINA_API_KEY"],
+      "params": {
+        "items": "${items}",
+        "connString": "${dataset.connString}",
+        "table": "ds_sk_judikatura.passages",
+        "keyColumn": "id",
+        "textColumns": ["text_contextual"],
+        "vectorColumn": "embedding",
+        "tokenBudget": "${source.config.tokenBudget}",
+        "dryRun": "${source.config.dryRun}",
+        "jinaApiKey": "${secret.JINA_API_KEY}"
+      },
+      "retry": { "type": "exponential", "maxAttempts": 3, "interval": "PT2M" },
+      "timeout": "PT30M",
+      "heartbeatMaxSeconds": 600,
+      "produces": ["ds_sk_judikatura.passages"]
+    }
+  ],
+  "releases": {
+    "breakingChanges": {
+      "0.1.0": {
+        "message": "Initial release: Supreme Court of the Slovak Republic decisions from the nsud.sk OpenData API (detect, grab by decision-date window, convert with PDF text and local OCR, ingest, embed), schema ds_sk_judikatura with 4 tables; Tools and Screens follow",
+        "scopedImpact": "new package"
+      }
+    }
+  },
   "dataset": {
     "schema": "ds_sk_judikatura",
     "migrations": "schema/migrations",
