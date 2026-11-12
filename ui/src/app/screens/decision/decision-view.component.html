@@ -1,0 +1,74 @@
+<section class="decision">
+  <header class="head">
+    <h1 data-testid="screen-title">{{ 'decision.title' | transloco }}</h1>
+    <button type="button" data-testid="dec-back" (click)="store.back()">{{ 'decision.back' | transloco }}</button>
+  </header>
+  <p class="hint" data-testid="dec-attribution">{{ 'common.attribution' | transloco }}</p>
+  <p class="hint strong" data-testid="dec-not-law">{{ 'common.notLaw' | transloco }}</p>
+
+  @switch (store.state()) {
+    @case ('idle') {
+      <p data-testid="dec-hint">{{ 'decision.hint' | transloco }}</p>
+    }
+    @case ('loading') {
+      <p data-testid="dec-loading">{{ 'common.loading' | transloco }}</p>
+    }
+    @case ('notfound') {
+      <p data-testid="dec-notfound">{{ 'decision.notFound' | transloco }}</p>
+    }
+    @case ('error') {
+      <p class="error" role="alert" data-testid="dec-error">{{ 'common.error' | transloco }} <span class="detail">{{ store.errorDetail() }}</span></p>
+    }
+    @case ('ready') {
+      @if (store.decision(); as dec) {
+        <div class="header" data-testid="dec-header">
+          <span class="badge" data-testid="dec-court">@if (courtKey(dec.court); as key) {{{ key | transloco }}} @else {{{ dec.court }}}</span>
+          <strong>{{ dec.cislo }}</strong>
+          @if (dec.senat) {
+            <span class="meta" data-testid="dec-senat">{{ 'decision.senat' | transloco: { senat: dec.senat } }}</span>
+          }
+          @if (dec.kolegiumNazov) {
+            <span class="meta" data-testid="dec-kolegium">{{ dec.kolegiumNazov }}</span>
+          }
+          @if (dec.ecli) {
+            <span class="meta" data-testid="dec-ecli">{{ dec.ecli }}</span>
+          } @else {
+            <span class="meta" data-testid="dec-no-ecli">{{ 'decision.noEcli' | transloco }}</span>
+          }
+          @if (dec.datumRozhodnutia) {
+            <span class="meta" data-testid="dec-date">{{ dec.datumRozhodnutia | date: 'yyyy-MM-dd' : 'UTC' }}</span>
+          }
+          @if (dec.sudca) {
+            <span class="meta" data-testid="dec-sudca">{{ 'decision.judge' | transloco: { name: dec.sudca } }}</span>
+          }
+          @if (sourceKey(dec.textSource); as key) {
+            <span class="badge" [class.ocr]="dec.textSource === 'ocr'" data-testid="dec-text-source" [attr.title]="dec.textSource === 'ocr' ? ('decision.ocrHint' | transloco) : null">{{ key | transloco }}</span>
+          }
+          @if (dec.piiFlags > 0) {
+            <span class="badge ocr" role="status" data-testid="dec-pii">{{ 'decision.pii' | transloco: { n: dec.piiFlags } }}</span>
+          }
+          @if (store.pdfLink() !== '') {
+            <a class="meta" data-testid="dec-pdf" target="_blank" rel="noopener noreferrer" [href]="store.pdfLink()">{{ 'decision.pdfLink' | transloco }}</a>
+          }
+          @if (store.sourceLink() !== '') {
+            <a class="meta" data-testid="dec-source" target="_blank" rel="noopener noreferrer" [href]="store.sourceLink()">{{ 'decision.sourceLink' | transloco }}</a>
+          }
+        </div>
+        @if (dec.merito) {
+          <h2 class="merito" data-testid="dec-merito">{{ dec.merito }}</h2>
+        }
+
+        <article class="body">
+          <pre class="text" data-testid="dec-text">{{ store.text() }}</pre>
+          <p class="meta" data-testid="dec-length">{{ 'decision.length' | transloco: { loaded: store.text().length, total: dec.textLength } }}</p>
+          @if (store.moreError() !== '') {
+            <p class="error" role="alert" data-testid="dec-slice-error">{{ 'common.error' | transloco }} <span class="detail">{{ store.moreError() }}</span></p>
+          }
+          @if (store.hasMore()) {
+            <button type="button" data-testid="dec-next" [disabled]="store.loadingMore()" (click)="store.nextSlice()">{{ 'decision.nextSlice' | transloco }}</button>
+          }
+        </article>
+      }
+    }
+  }
+</section>

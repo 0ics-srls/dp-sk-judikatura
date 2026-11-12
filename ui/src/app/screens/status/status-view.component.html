@@ -1,0 +1,125 @@
+<section class="status">
+  <header class="head">
+    <h1 data-testid="screen-title">{{ 'status.title' | transloco }}</h1>
+    <button type="button" data-testid="status-refresh" [disabled]="store.loading()" (click)="store.refresh()">{{ 'status.refresh' | transloco }}</button>
+  </header>
+
+  @if (store.error(); as key) {
+    <p class="error" role="alert" data-testid="status-error">{{ key | transloco }} <span class="detail">{{ store.errorDetail() }}</span></p>
+  } @else if (!store.loaded()) {
+    <p data-testid="status-loading">{{ 'common.loading' | transloco }}</p>
+  } @else if (store.empty()) {
+    <p data-testid="status-empty">{{ 'status.empty' | transloco }}</p>
+  } @else {
+    <table class="grid">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'status.columns.court' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.decisions' | transloco }}</th>
+          <th scope="col">{{ 'status.columns.years' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.api' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.pdf' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.ocr' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.passages' | transloco }}</th>
+          <th scope="col" class="num">{{ 'status.columns.pending' | transloco }}</th>
+          <th scope="col">{{ 'status.columns.kolegium' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of store.courts(); track row.court) {
+          <tr data-testid="status-row">
+            <td>
+              @if (courtKey(row.court); as key) {
+                {{ key | transloco }}
+              } @else {
+                {{ row.court }}
+              }
+            </td>
+            <td class="num">{{ row.decisions }}</td>
+            <td>{{ row.yearMin ?? '-' }}-{{ row.yearMax ?? '-' }}</td>
+            <td class="num" data-testid="status-api">{{ source(row.textSources, 'api') }}</td>
+            <td class="num" data-testid="status-pdf">{{ source(row.textSources, 'pdf') }}</td>
+            <td class="num" data-testid="status-ocr">{{ source(row.textSources, 'ocr') }}</td>
+            <td class="num" data-testid="status-passages">{{ row.passagesTotal }}</td>
+            <td class="num">
+              @if (row.passagesPending > 0) {
+                <span class="warning" role="status" data-testid="status-warning" [title]="'status.pendingWarning' | transloco">{{ row.passagesPending }}</span>
+              } @else {
+                0
+              }
+            </td>
+            <td data-testid="status-kolegium">
+              @for (item of store.kolegia(row); track item.code) {
+                <span class="kolegium">
+                  @if (item.name) {
+                    {{ 'corpus.kolegia.' + item.name | transloco }}
+                  } @else {
+                    {{ item.code }}
+                  }
+                  {{ item.count }}
+                </span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @if (store.anyPending()) {
+      <p class="warning-note" role="status" data-testid="status-pending-note">{{ 'status.pendingWarning' | transloco }}</p>
+    }
+
+    <p data-testid="status-pii">{{ 'status.pii' | transloco: { n: store.piiTotal() } }}</p>
+
+    @if (store.lastIngestedAt(); as at) {
+      <p data-testid="status-last">{{ 'status.lastIngested' | transloco: { at: (at | date: 'yyyy-MM-dd HH:mm' : 'UTC') } }}</p>
+    }
+
+    @if (store.skipped().length > 0) {
+      <div class="skipped" data-testid="status-skipped">
+        <strong>{{ 'status.skipped' | transloco }}</strong>
+        <ul>
+          @for (item of store.skipped(); track item.reason) {
+            <li><code>{{ item.reason }}</code>: {{ item.count }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (store.coverage().length > 0) {
+      <table class="grid coverage">
+        <caption>{{ 'status.coverage.title' | transloco }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'status.coverage.window' | transloco }}</th>
+            <th scope="col" class="num">{{ 'status.coverage.listed' | transloco }}</th>
+            <th scope="col" class="num">{{ 'status.coverage.taken' | transloco }}</th>
+            <th scope="col" class="num">{{ 'status.coverage.pdfOnly' | transloco }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (line of store.coverage(); track line.key) {
+            <tr data-testid="coverage-row">
+              <td>{{ line.label }}</td>
+              <td class="num">{{ line.idsListed }}</td>
+              <td class="num">{{ line.idsTaken }}</td>
+              <td class="num">{{ line.pdfOnly }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+
+  @if (store.limits(); as limits) {
+    <section class="limits">
+      <h2>{{ 'status.limits' | transloco }}</h2>
+      <p class="note" data-testid="status-limits">{{ limits }}</p>
+    </section>
+  }
+
+  <footer class="footer" data-testid="status-footer">
+    <p>{{ 'common.attribution' | transloco }}</p>
+    <p>{{ 'common.notLaw' | transloco }}</p>
+  </footer>
+</section>
