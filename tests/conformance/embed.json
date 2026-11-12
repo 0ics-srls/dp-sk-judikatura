@@ -1,0 +1,16 @@
+{
+  "check": { "dryRun": true },
+  "run": {
+    "dryRun": true,
+    "table": "ds_sk_judikatura.passages",
+    "keyColumn": "id",
+    "textColumns": ["text_contextual"],
+    "vectorColumn": "embedding",
+    "tokenBudget": 0,
+    "sourceId": "00000000-0000-0000-0000-000000000001",
+    "batchId": "conformance",
+    "packageVersion": "conformance",
+    "items": []
+  },
+  "expect": { "minItems": 0 }
+}

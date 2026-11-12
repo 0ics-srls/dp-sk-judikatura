@@ -1,0 +1,11 @@
+{
+  "tool": "search",
+  "params": {
+    "query": "dovolanie",
+    "mode": "lexical"
+  },
+  "expect": {
+    "minRows": 0,
+    "maxRows": 50
+  }
+}

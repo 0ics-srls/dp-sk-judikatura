@@ -1,0 +1,13 @@
+{
+  "description": "Real coverage of the Slovak case law corpus, computed from the data: one row per court with counts (decisions, passages, passages still without embedding, shape-guard hits in pii_flags_total), the year range, the text source mix (api, pdf, ocr), decisions per chamber and per year, skipped items by reason, the last coverage windows (ids listed versus taken per month), the last ingestion and a note with the honest limits. An empty corpus answers one row of zeros. No parameters.",
+  "version": 1,
+  "parameters": {
+    "type": "object",
+    "properties": {}
+  },
+  "annotations": { "readOnlyHint": true, "idempotentHint": true },
+  "maxRows": 5,
+  "maxBytes": 262144,
+  "timeoutMs": 10000,
+  "pagination": "none"
+}

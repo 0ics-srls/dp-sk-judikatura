@@ -1,0 +1,180 @@
+{
+  "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
+  "name": "sk-judikatura",
+  "version": "0.1.0",
+  "hostApi": "1",
+  "sources": [
+    {
+      "title": "Najvyssi sud Slovenskej republiky - OpenData (nsud.sk)",
+      "path": "https://www.nsud.sk/opendata/",
+      "licenses": [
+        {
+          "name": "open-data-unnamed",
+          "title": "NS SR OpenData page: free reuse for any purpose, no licence named; court decisions are outside copyright (art. 5 Act 185/2015)",
+          "path": "https://www.nsud.sk/opendata/"
+        }
+      ]
+    }
+  ],
+  "sourceTypes": [
+    {
+      "key": "nsud-decisions",
+      "title": "Supreme Court of the Slovak Republic decisions (OpenData API, by decision date)",
+      "configSchema": {
+        "type": "object",
+        "properties": {
+          "annoFrom": { "type": "integer", "minimum": 2005, "maximum": 2100, "default": 2005, "description": "First year of decision dates (the site holds nothing before 2005)" },
+          "annoTo": { "type": "integer", "minimum": 2005, "maximum": 2100, "description": "Last year of decision dates (default: the current year)" },
+          "ids": { "type": "array", "items": { "type": "string", "pattern": "^[0-9]{1,9}$" }, "maxItems": 50, "uniqueItems": true, "description": "Sample filter: explicit nsud decision ids (no window enumeration)" },
+          "maxDocs": { "type": "integer", "minimum": 1, "description": "Sample filter: stop after this many decisions per month" },
+          "includePdfOnly": { "type": "boolean", "default": true, "description": "Ingest decisions that only have a PDF attachment (text layer, OCR fallback)" },
+          "verifyTls": { "type": "boolean", "default": true },
+          "delaySeconds": { "type": "number", "minimum": 0.3, "default": 0.4 },
+          "baseUrl": { "type": "string", "default": "https://www.nsud.sk", "description": "Only change for a replay server" },
+          "refreshToken": { "type": "string" },
+          "tokenBudget": { "type": "integer", "minimum": 0, "default": 20000, "description": "Hard stop of Jina tokens per embedding Run" },
+          "dryRun": { "type": "boolean", "default": false, "description": "Embedding step plans only: no Jina call, nothing written" }
+        }
+      },
+      "x-ui": {
+        "order": ["annoFrom", "annoTo", "ids", "maxDocs", "includePdfOnly", "verifyTls", "delaySeconds", "baseUrl", "refreshToken", "tokenBudget", "dryRun"],
+        "labels": { "annoFrom": "From year", "annoTo": "To year", "ids": "Only these decision ids", "maxDocs": "Max decisions per month", "includePdfOnly": "Include PDF-only decisions", "verifyTls": "Verify TLS", "delaySeconds": "Pause between requests (s)", "baseUrl": "Base URL", "refreshToken": "Refresh token", "tokenBudget": "Embedding token budget", "dryRun": "Embedding dry run" },
+        "help": {
+          "annoFrom": "First year of decision dates; enumeration uses decision date windows (art_datrozh_*)",
+          "annoTo": "Last year of decision dates (default current year)",
+          "ids": "Sample filter: nsud decision ids, fetched one by one with no window call",
+          "maxDocs": "Sample filter for the live proof",
+          "includePdfOnly": "Decisions before about 2014 have no text in the API; the text comes from the PDF (OCR when it is a scan)",
+          "verifyTls": "Leave on",
+          "delaySeconds": "Pause between requests to the source, at least 0.3 s",
+          "baseUrl": "Only change for a replay server (host.docker.internal)",
+          "refreshToken": "Change this value to fetch all months again",
+          "tokenBudget": "Maximum Jina tokens one Run may spend on embeddings (default 20000)",
+          "dryRun": "Plan the embeddings without calling Jina"
+        }
+      }
+    }
+  ],
+  "catalog": {
+    "noveltyKey": "itemId|version",
+    "retryFailed": "newUrlOnly"
+  },
+  "pipeline": [
+    {
+      "step": "detect",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-detect@v0.1.0",
+      "params": {
+        "annoFrom": "${source.config.annoFrom}",
+        "annoTo": "${source.config.annoTo}",
+        "ids": "${source.config.ids}",
+        "maxDocs": "${source.config.maxDocs}",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "verifyTls": "${source.config.verifyTls}",
+        "delaySeconds": "${source.config.delaySeconds}",
+        "baseUrl": "${source.config.baseUrl}",
+        "state": "${source.state}",
+        "refreshToken": "${source.config.refreshToken}"
+      },
+      "emits": "catalog",
+      "retry": { "type": "exponential", "maxAttempts": 3, "interval": "PT5M" },
+      "timeout": "PT10M"
+    },
+    {
+      "step": "grab",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-grab@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "concurrencyLimit": 1,
+      "params": {
+        "items": "${items}",
+        "dir": "${dataRoot}/dp-sk-judikatura/${source.id}/raw",
+        "ids": "${source.config.ids}",
+        "maxDocs": "${source.config.maxDocs}",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "verifyTls": "${source.config.verifyTls}",
+        "delaySeconds": "${source.config.delaySeconds}",
+        "baseUrl": "${source.config.baseUrl}"
+      },
+      "retry": { "type": "fixed", "maxAttempts": 2, "interval": "PT2M" },
+      "timeout": "PT2H",
+      "allowedHosts": ["www.nsud.sk"]
+    },
+    {
+      "step": "convert",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-convert@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "params": {
+        "items": "${items}",
+        "dirIn": "${dataRoot}/dp-sk-judikatura/${source.id}/raw",
+        "dirOut": "${dataRoot}/dp-sk-judikatura/${source.id}/plan",
+        "includePdfOnly": "${source.config.includePdfOnly}",
+        "maxDocs": "${source.config.maxDocs}",
+        "ids": "${source.config.ids}"
+      },
+      "resources": {
+        "maxMemoryMbytes": 3072,
+        "cpuLimit": 2
+      },
+      "timeout": "PT2H",
+      "heartbeatMaxSeconds": 900
+    },
+    {
+      "step": "ingest",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-ingest@v0.1.0",
+      "perItem": true,
+      "chunkSize": 1,
+      "db": "dataset",
+      "params": {
+        "items": "${items}",
+        "dirIn": "${dataRoot}/dp-sk-judikatura/${source.id}/plan",
+        "connString": "${dataset.connString}",
+        "schema": "ds_sk_judikatura"
+      },
+      "timeout": "PT1H",
+      "produces": [
+        "ds_sk_judikatura.rozhodnutia",
+        "ds_sk_judikatura.passages",
+        "ds_sk_judikatura.skipped",
+        "ds_sk_judikatura.coverage"
+      ]
+    },
+    {
+      "step": "embed",
+      "class": "git:github.com/0ics-srls/dp-lex-embed@dp-p7.1",
+      "perItem": true,
+      "chunkSize": 1,
+      "concurrencyLimit": 1,
+      "db": "dataset",
+      "secrets": ["JINA_API_KEY"],
+      "params": {
+        "items": "${items}",
+        "connString": "${dataset.connString}",
+        "table": "ds_sk_judikatura.passages",
+        "keyColumn": "id",
+        "textColumns": ["text_contextual"],
+        "vectorColumn": "embedding",
+        "tokenBudget": "${source.config.tokenBudget}",
+        "dryRun": "${source.config.dryRun}",
+        "jinaApiKey": "${secret.JINA_API_KEY}"
+      },
+      "retry": { "type": "exponential", "maxAttempts": 3, "interval": "PT2M" },
+      "timeout": "PT30M",
+      "heartbeatMaxSeconds": 600,
+      "produces": ["ds_sk_judikatura.passages"]
+    }
+  ],
+  "releases": {
+    "breakingChanges": {
+      "0.1.0": {
+        "message": "Initial release: Supreme Court of the Slovak Republic decisions from the nsud.sk OpenData API (detect, grab by decision-date window, convert with PDF text and local OCR, ingest, embed), schema ds_sk_judikatura with 4 tables, 5 Tools (search, rozhodnutie, lookup, guide, status), no Screens yet",
+        "scopedImpact": "new package"
+      }
+    }
+  },
+  "dataset": {
+    "schema": "ds_sk_judikatura",
+    "migrations": "schema/migrations",
+    "contract": "serving/dataset.odcs.yaml"
+  }
+}
