@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
   "name": "sk-judikatura",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "hostApi": "1",
   "sources": [
     {
@@ -204,6 +204,10 @@
   },
   "releases": {
     "breakingChanges": {
+      "0.2.1": {
+        "message": "Full-text configuration sk_unaccent (simple + unaccent, D142): a query typed without diacritics now matches (zalobca finds žalobca); migration 0003 adds search_vector_sk (generated, GIN) next to the old search_vector, which stays unused; search, guide and status texts updated; no Tool parameter changes, no data change",
+        "scopedImpact": "search results of sk-judikatura_search"
+      },
       "0.2.0": {
         "message": "Screens added: decisions list with search, filters and lookup by case number, decision detail with text slices and the shape-guard badge, corpus status (Console menu Slovak case law); grab 0.1.1 stores the decision page URL; no Tool, column or table is changed, no data change",
         "scopedImpact": "sk-judikatura UI, source_url of newly fetched decisions"

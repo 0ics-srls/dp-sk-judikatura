@@ -41,8 +41,8 @@ the item with `window_capped`).
 ## Pins
 
 Classes (all `0ics-srls`, tag `v0.1.0`): `dp-sk-judikatura-detect`, `dp-sk-judikatura-grab`, `dp-sk-judikatura-convert`, `dp-sk-judikatura-ingest`; shared
-embed class `dp-lex-embed@dp-p7.1`. Full-text configuration `simple` (no stemming, no accent folding: the Host creates only the `vector` extension, so the
-D142 `sk_unaccent` configuration could not be created, decision P81-22).
+embed class `dp-lex-embed@dp-p7.1`. Full-text configuration `sk_unaccent` (simple + unaccent: diacritics folded, no stemming; migration 0003, the Host creates the `unaccent` extension, D142;
+the generated column is `search_vector_sk`, the old `search_vector` of 0.1.0 and 0.2.0 stays unused because migrations cannot drop).
 
 ## Posture and licence
 
@@ -54,7 +54,7 @@ Decisions are published anonymised by the Court; the package adds no NER, it cou
 
 | Tool | Purpose |
 |---|---|
-| `search` | hybrid search (simple full-text + best passage, RRF); filters `court`, `kolegium`, `datum_from`, `datum_to`; `mode` hybrid, lexical, semantic; `k` 1..50; no query lists the newest decisions |
+| `search` | hybrid search (sk_unaccent full-text + best passage, RRF); filters `court`, `kolegium`, `datum_from`, `datum_to`; `mode` hybrid, lexical, semantic; `k` 1..50; no query lists the newest decisions |
 | `rozhodnutie` | one decision by `id`, `ecli` or `cislo` (exactly one), text in slices (`offset`, `length`, `next_offset`) |
 | `lookup` | structured list by extremes (replaces the never exposed branch-53 `query_judikatura`), paging with `total`, never the text |
 | `guide` | usage text for agents (Slovak, short Italian section) and the honest limits |

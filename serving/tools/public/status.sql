@@ -30,7 +30,7 @@ cov AS (
                               ORDER BY window_from), '[]'::jsonb) AS windows
       FROM (SELECT * FROM coverage ORDER BY window_from DESC LIMIT 24) c),
 note AS (
-    SELECT 'Iba Najvyssi sud SR (NS SR) z OpenData nsud.sk od roku 2005, nie sudy nizsich stupnov ani Ustavny sud SR. Fulltext simple: bez stemmingu a bez zhody diakritiky. '
+    SELECT 'Iba Najvyssi sud SR (NS SR) z OpenData nsud.sk od roku 2005, nie sudy nizsich stupnov ani Ustavny sud SR. Fulltext sk_unaccent: diakritika sa sklada, bez stemmingu. '
            || 'Text rozhodnuti pred rokom 2014 pochadza z prilohy PDF (text_source pdf alebo ocr). Passages bez embeddingu nie su dosiahnutelne semantickym hladanim. '
            || 'pii_flags_total pocita retazce tvaru rodne cislo, IBAN, e-mail a telefon; rozhodnutia anonymizuje sud.' AS text)
 SELECT per.court,

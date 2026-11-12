@@ -17,7 +17,7 @@ text_source: api = text z API, pdf = textová vrstva prílohy PDF, ocr = lokáln
 
 POCTIVÉ LIMITY
 - Iba Najvyšší súd SR (NS SR): nie sú tu súdy nižších stupňov ani Ústavný súd SR. Ide o rozhodnutia, ktoré súd zverejnil v službe OpenData, nie o všetky rozhodnutia.
-- Fulltext používa konfiguráciu simple: bez stemmingu a bez zhody diakritiky. Ohnuté tvary (zmenka, zmenky, zmenke) sú rôzne slová a slovo napísané bez diakritiky nezhoduje slovo s diakritikou; sémantické poradie to čiastočne vyrovnáva.
+- Fulltext používa konfiguráciu sk_unaccent (simple + unaccent): veľkosť písmen aj diakritika sa skladajú (zalobca nájde žalobca), ale bez stemmingu. Ohnuté tvary (zmenka, zmenky, zmenke) sú rôzne slová; sémantické poradie to čiastočne vyrovnáva.
 - Rozhodnutia anonymizuje súd pred zverejnením; balík nepoužíva NER, iba počíta reťazce tvaru rodné číslo, IBAN, e-mail a telefón (pii_flags) a nikdy ich nemaže ani neblokuje.
 - Licencia: stránka OpenData nepomenúva licenciu (voľné použitie na akýkoľvek účel); rozhodnutia súdov nie sú autorským dielom. Zdroj: nsud.sk OpenData.
 - Judikatúra nie je prameňom práva sama osebe; cituj značku a ECLI.
