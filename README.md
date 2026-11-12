@@ -13,6 +13,15 @@ Data Package `sk-judikatura` (open-lex-it, phase 81): decisions of the Supreme C
 | `serving/tools/public/` | curated Tools (plan-b of the phase; none in this release) |
 | `tests/sql/`, `tests/conformance/` | the package's own SQL tests and the detect/embed conformance files |
 
+## Schema `ds_sk_judikatura`
+
+| Table | Content |
+|---|---|
+| `rozhodnutia` | one row per decision, identity `(fonte, source_id)`; court, cislo, senat, ecli, datum, kolegium, merito, sudca, `text_raw`, `text_source` (api, pdf, ocr), urls, `pii_flags`, generated `search_vector` |
+| `passages` | embeddable passages of a decision (`text_contextual` is what is embedded), `embedding vector(1024)` HNSW cosine |
+| `skipped` | items seen but not turned into a decision, with the reason |
+| `coverage` | ids listed versus taken per decision-date window |
+
 ## Source `nsud-decisions`
 
 | Setting | Meaning |

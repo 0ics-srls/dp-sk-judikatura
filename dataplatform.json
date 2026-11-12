@@ -167,7 +167,7 @@
   "releases": {
     "breakingChanges": {
       "0.1.0": {
-        "message": "Initial release: Supreme Court of the Slovak Republic decisions from the nsud.sk OpenData API (detect, grab by decision-date window, convert with PDF text and local OCR, ingest, embed), schema ds_sk_judikatura with 4 tables; Tools and Screens follow",
+        "message": "Initial release: Supreme Court of the Slovak Republic decisions from the nsud.sk OpenData API (detect, grab by decision-date window, convert with PDF text and local OCR, ingest, embed), schema ds_sk_judikatura with 4 tables, 5 Tools (search, rozhodnutie, lookup, guide, status), no Screens yet",
         "scopedImpact": "new package"
       }
     }
