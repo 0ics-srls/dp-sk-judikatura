@@ -1,0 +1,13 @@
+{
+  "description": "How to use the Slovak case law corpus (decisions of the Supreme Court of the Slovak Republic, NS SR, from the nsud.sk OpenData service): what it holds, which Tool to call for what, how to read the results and the honest limits. One row with the Slovak text and a short Italian section. No parameters.",
+  "version": 1,
+  "parameters": {
+    "type": "object",
+    "properties": {}
+  },
+  "annotations": { "readOnlyHint": true, "idempotentHint": true },
+  "maxRows": 1,
+  "maxBytes": 65536,
+  "timeoutMs": 5000,
+  "pagination": "none"
+}
