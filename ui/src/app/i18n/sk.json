@@ -1,0 +1,89 @@
+{
+  "common": {
+    "loading": "Načítavam...",
+    "error": "Údaje sa nepodarilo načítať.",
+    "previous": "Predchádzajúca",
+    "next": "Ďalšia",
+    "pager": "Stránky",
+    "range": "{{from}}-{{to}} z {{total}}",
+    "any": "Všetky",
+    "attribution": "Najvyšší súd SR - OpenData (nsud.sk); rozhodnutia anonymizuje súd; licencia nie je uvedená; nie je prameň práva",
+    "notLaw": "Judikatúra sama osebe NIE JE prameň práva."
+  },
+  "corpus": {
+    "title": "Judikatúra SR",
+    "search": "Hľadať v rozhodnutiach",
+    "searchPlaceholder": "napr. nahrada skody",
+    "noStemming": "Slovenské vyhľadávanie nemá lematizáciu ani zhodu diakritiky: skloňované tvary a slová napísané bez diakritiky sa nenájdu.",
+    "mode": "Režim",
+    "modes": { "hybrid": "hybridný", "lexical": "lexikálny", "semantic": "sémantický" },
+    "modeShown": "Režim vyhľadávania: {{mode}}",
+    "court": "Súd",
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "kolegium": "Kolégium",
+    "kolegia": { "civil": "Občianskoprávne", "commercial": "Obchodnoprávne", "administrative": "Správne", "criminal": "Trestnoprávne" },
+    "datumFrom": "Rozhodnuté od",
+    "datumTo": "Rozhodnuté do",
+    "sort": "Zoradiť podľa",
+    "sorts": { "datum_desc": "dátum, najnovšie", "datum_asc": "dátum, najstaršie", "cislo": "číslo konania" },
+    "pdfBadge": "PDF",
+    "pdfBadgeHint": "Text pochádza z PDF prílohy rozhodnutia.",
+    "warnings": "Poznámka: vyhľadávanie odpovedalo s upozornením ({{codes}}); výsledok môže byť neúplný.",
+    "empty": "Nenašli sa žiadne rozhodnutia.",
+    "lookup": {
+      "title": "Nájsť podľa čísla",
+      "cislo": "Číslo konania",
+      "cisloPlaceholder": "napr. 8Cdo/21/2014",
+      "ecli": "ECLI",
+      "ecliPlaceholder": "ECLI:SK:NSSR:2020:...",
+      "go": "Nájsť",
+      "clear": "Späť na zoznam"
+    }
+  },
+  "decision": {
+    "title": "Rozhodnutie",
+    "back": "Späť na korpus",
+    "hint": "Otvorte rozhodnutie zo zoznamu korpusu a prečítate si ho tu.",
+    "notFound": "Rozhodnutie sa nenašlo.",
+    "noEcli": "bez ECLI (pred 2011/2014)",
+    "senat": "Senát {{senat}}",
+    "judge": "Sudca: {{name}}",
+    "merito": "Výrok",
+    "length": "{{loaded}} z {{total}} znakov",
+    "nextSlice": "Načítať ďalšiu časť",
+    "textSource": { "api": "Text z API", "pdf": "Text z PDF", "ocr": "OCR" },
+    "ocrHint": "Text pochádza zo skenovaného PDF prečítaného lokálnym OCR: možné sú chyby.",
+    "pii": "Nájdených reťazcov v tvare osobných údajov: {{n}}; nahlásené prevádzkovateľovi",
+    "pdfLink": "Otvoriť PDF",
+    "sourceLink": "Otvoriť na zdroji"
+  },
+  "status": {
+    "title": "Stav korpusu",
+    "refresh": "Obnoviť",
+    "empty": "Zatiaľ žiadne rozhodnutia: prvý import ešte neprebehol.",
+    "columns": {
+      "court": "Súd",
+      "decisions": "Rozhodnutia",
+      "years": "Roky",
+      "api": "Text z API",
+      "pdf": "Text z PDF",
+      "ocr": "OCR",
+      "passages": "Pasáže",
+      "pending": "Bez embeddingu",
+      "kolegium": "Podľa kolégia"
+    },
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "pendingWarning": "Pasáže bez embeddingu sa nedajú nájsť sémantickým vyhľadávaním.",
+    "pii": "Reťazce v tvare osobných údajov nájdené v textoch: {{n}}",
+    "lastIngested": "Posledný import: {{at}}",
+    "skipped": "Preskočené položky podľa dôvodu",
+    "coverage": {
+      "title": "Posledné okná pokrytia",
+      "window": "Mesiac",
+      "listed": "Vypísané id",
+      "taken": "Prevzaté",
+      "pdfOnly": "Iba PDF"
+    },
+    "limits": "Úprimné obmedzenia"
+  }
+}

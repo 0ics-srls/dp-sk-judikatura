@@ -1,0 +1,89 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "The data could not be loaded.",
+    "previous": "Previous",
+    "next": "Next",
+    "pager": "Pages",
+    "range": "{{from}}-{{to}} of {{total}}",
+    "any": "Any",
+    "attribution": "Najvyssi sud SR - OpenData (nsud.sk); decisions are anonymised by the Court; licence not named; not a source of law",
+    "notLaw": "Case law is NOT a source of law by itself."
+  },
+  "corpus": {
+    "title": "Slovak case law",
+    "search": "Search the decisions",
+    "searchPlaceholder": "e.g. nahrada skody",
+    "noStemming": "Slovak search has no stemming and no accent folding: inflected forms and words typed without diacritics do not match.",
+    "mode": "Mode",
+    "modes": { "hybrid": "hybrid", "lexical": "lexical", "semantic": "semantic" },
+    "modeShown": "Search mode: {{mode}}",
+    "court": "Court",
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "kolegium": "Chamber",
+    "kolegia": { "civil": "Civil", "commercial": "Commercial", "administrative": "Administrative", "criminal": "Criminal" },
+    "datumFrom": "Decided from",
+    "datumTo": "Decided to",
+    "sort": "Sort by",
+    "sorts": { "datum_desc": "date, newest first", "datum_asc": "date, oldest first", "cislo": "case number" },
+    "pdfBadge": "PDF",
+    "pdfBadgeHint": "The text comes from the PDF attachment of the decision.",
+    "warnings": "Note: the search answered with a warning ({{codes}}); the result may be incomplete.",
+    "empty": "No decisions found.",
+    "lookup": {
+      "title": "Find by number",
+      "cislo": "Case number",
+      "cisloPlaceholder": "e.g. 8Cdo/21/2014",
+      "ecli": "ECLI",
+      "ecliPlaceholder": "ECLI:SK:NSSR:2020:...",
+      "go": "Find",
+      "clear": "Back to the list"
+    }
+  },
+  "decision": {
+    "title": "Decision",
+    "back": "Back to the corpus",
+    "hint": "Open a decision from the corpus list to read it here.",
+    "notFound": "This decision was not found.",
+    "noEcli": "no ECLI (before 2011/2014)",
+    "senat": "Senate {{senat}}",
+    "judge": "Judge: {{name}}",
+    "merito": "Outcome",
+    "length": "{{loaded}} of {{total}} characters",
+    "nextSlice": "Load the next part",
+    "textSource": { "api": "API text", "pdf": "PDF text", "ocr": "OCR" },
+    "ocrHint": "The text comes from a scanned PDF read with local OCR: errors are possible.",
+    "pii": "{{n}} personal-data-shaped strings found; reported to the operator",
+    "pdfLink": "Open the PDF",
+    "sourceLink": "Open at the source"
+  },
+  "status": {
+    "title": "Corpus status",
+    "refresh": "Refresh",
+    "empty": "No decisions yet: the first import has not run.",
+    "columns": {
+      "court": "Court",
+      "decisions": "Decisions",
+      "years": "Years",
+      "api": "API text",
+      "pdf": "PDF text",
+      "ocr": "OCR",
+      "passages": "Passages",
+      "pending": "Without embedding",
+      "kolegium": "By chamber"
+    },
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "pendingWarning": "Passages without an embedding are not reachable by the semantic search.",
+    "pii": "Strings shaped like personal data found in the texts: {{n}}",
+    "lastIngested": "Last ingest: {{at}}",
+    "skipped": "Skipped items by reason",
+    "coverage": {
+      "title": "Last coverage windows",
+      "window": "Month",
+      "listed": "Ids listed",
+      "taken": "Taken",
+      "pdfOnly": "PDF only"
+    },
+    "limits": "Honest limits"
+  }
+}

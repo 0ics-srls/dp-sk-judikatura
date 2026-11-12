@@ -1,0 +1,89 @@
+{
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Impossibile caricare i dati.",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "pager": "Pagine",
+    "range": "{{from}}-{{to}} di {{total}}",
+    "any": "Qualsiasi",
+    "attribution": "Najvyssi sud SR - OpenData (nsud.sk); le decisioni sono anonimizzate dalla Corte; licenza non indicata; non è una fonte del diritto",
+    "notLaw": "La giurisprudenza di per sé NON è una fonte del diritto."
+  },
+  "corpus": {
+    "title": "Giurisprudenza slovacca",
+    "search": "Cerca nelle decisioni",
+    "searchPlaceholder": "es. nahrada skody",
+    "noStemming": "La ricerca slovacca non ha stemming né normalizzazione degli accenti: le forme flesse e le parole scritte senza diacritici non corrispondono.",
+    "mode": "Modalità",
+    "modes": { "hybrid": "ibrida", "lexical": "lessicale", "semantic": "semantica" },
+    "modeShown": "Modalità di ricerca: {{mode}}",
+    "court": "Corte",
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "kolegium": "Collegio",
+    "kolegia": { "civil": "Civile", "commercial": "Commerciale", "administrative": "Amministrativo", "criminal": "Penale" },
+    "datumFrom": "Deciso dal",
+    "datumTo": "Deciso fino al",
+    "sort": "Ordina per",
+    "sorts": { "datum_desc": "data, più recenti", "datum_asc": "data, più vecchie", "cislo": "numero del procedimento" },
+    "pdfBadge": "PDF",
+    "pdfBadgeHint": "Il testo proviene dall'allegato PDF della decisione.",
+    "warnings": "Nota: la ricerca ha risposto con un avviso ({{codes}}); il risultato può essere incompleto.",
+    "empty": "Nessuna decisione trovata.",
+    "lookup": {
+      "title": "Cerca per numero",
+      "cislo": "Numero del procedimento",
+      "cisloPlaceholder": "es. 8Cdo/21/2014",
+      "ecli": "ECLI",
+      "ecliPlaceholder": "ECLI:SK:NSSR:2020:...",
+      "go": "Cerca",
+      "clear": "Torna all'elenco"
+    }
+  },
+  "decision": {
+    "title": "Decisione",
+    "back": "Torna al corpus",
+    "hint": "Apri una decisione dall'elenco del corpus per leggerla qui.",
+    "notFound": "Questa decisione non è stata trovata.",
+    "noEcli": "senza ECLI (prima del 2011/2014)",
+    "senat": "Senato {{senat}}",
+    "judge": "Giudice: {{name}}",
+    "merito": "Esito",
+    "length": "{{loaded}} di {{total}} caratteri",
+    "nextSlice": "Carica la parte successiva",
+    "textSource": { "api": "Testo da API", "pdf": "Testo da PDF", "ocr": "OCR" },
+    "ocrHint": "Il testo proviene da un PDF scansionato letto con OCR locale: sono possibili errori.",
+    "pii": "{{n}} stringhe con forma di dati personali trovate; segnalate all'operatore",
+    "pdfLink": "Apri il PDF",
+    "sourceLink": "Apri alla fonte"
+  },
+  "status": {
+    "title": "Stato del corpus",
+    "refresh": "Aggiorna",
+    "empty": "Nessuna decisione ancora: il primo import non è stato eseguito.",
+    "columns": {
+      "court": "Corte",
+      "decisions": "Decisioni",
+      "years": "Anni",
+      "api": "Testo da API",
+      "pdf": "Testo da PDF",
+      "ocr": "OCR",
+      "passages": "Passaggi",
+      "pending": "Senza embedding",
+      "kolegium": "Per collegio"
+    },
+    "courts": { "NSSR": "NS SR", "NSSSR": "NSS SR" },
+    "pendingWarning": "I passaggi senza embedding non sono raggiungibili dalla ricerca semantica.",
+    "pii": "Stringhe con forma di dati personali trovate nei testi: {{n}}",
+    "lastIngested": "Ultimo import: {{at}}",
+    "skipped": "Elementi saltati per motivo",
+    "coverage": {
+      "title": "Ultime finestre di copertura",
+      "window": "Mese",
+      "listed": "Id elencati",
+      "taken": "Presi",
+      "pdfOnly": "Solo PDF"
+    },
+    "limits": "Limiti onesti"
+  }
+}

@@ -1,0 +1,123 @@
+<section class="corpus">
+  <h1 data-testid="screen-title">{{ 'corpus.title' | transloco }}</h1>
+  <p class="hint" data-testid="corpus-attribution">{{ 'common.attribution' | transloco }}</p>
+  <p class="hint strong" data-testid="corpus-not-law">{{ 'common.notLaw' | transloco }}</p>
+  <p class="hint" data-testid="corpus-no-stemming">{{ 'corpus.noStemming' | transloco }}</p>
+
+  <div class="filters">
+    <label for="jd-search">{{ 'corpus.search' | transloco }}</label>
+    <input id="jd-search" type="search" data-testid="corpus-search" [placeholder]="'corpus.searchPlaceholder' | transloco" (input)="store.search(value($event))" />
+    <label for="jd-mode">{{ 'corpus.mode' | transloco }}</label>
+    <select id="jd-mode" data-testid="corpus-mode" (change)="store.mode(value($event))">
+      @for (name of modes; track name) {
+        <option [value]="name">{{ 'corpus.modes.' + name | transloco }}</option>
+      }
+    </select>
+    <label for="jd-court">{{ 'corpus.court' | transloco }}</label>
+    <select id="jd-court" data-testid="corpus-court" (change)="store.court(value($event))">
+      <option value="">{{ 'common.any' | transloco }}</option>
+      @for (name of courts; track name) {
+        <option [value]="name">{{ 'corpus.courts.' + name | transloco }}</option>
+      }
+    </select>
+    <label for="jd-kolegium">{{ 'corpus.kolegium' | transloco }}</label>
+    <select id="jd-kolegium" data-testid="corpus-kolegium" (change)="store.kolegium(value($event))">
+      <option value="">{{ 'common.any' | transloco }}</option>
+      @for (name of kolegia; track name) {
+        <option [value]="name">{{ 'corpus.kolegia.' + name | transloco }}</option>
+      }
+    </select>
+    <label for="jd-from">{{ 'corpus.datumFrom' | transloco }}</label>
+    <input id="jd-from" type="date" data-testid="corpus-datum-from" (input)="store.datumFrom(value($event))" />
+    <label for="jd-to">{{ 'corpus.datumTo' | transloco }}</label>
+    <input id="jd-to" type="date" data-testid="corpus-datum-to" (input)="store.datumTo(value($event))" />
+  </div>
+
+  @if (!store.paged()) {
+    <p class="hint" data-testid="corpus-mode-shown">{{ 'corpus.modeShown' | transloco: { mode: store.query().mode } }}</p>
+  } @else {
+    <div class="filters sorting">
+      <label for="jd-sort">{{ 'corpus.sort' | transloco }}</label>
+      <select id="jd-sort" data-testid="corpus-sort" (change)="store.sort(value($event))">
+        @for (name of sorts; track name) {
+          <option [value]="name">{{ 'corpus.sorts.' + name | transloco }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <div class="filters lookup" role="group" [attr.aria-label]="'corpus.lookup.title' | transloco">
+    <span class="legend">{{ 'corpus.lookup.title' | transloco }}</span>
+    <label for="jd-lc">{{ 'corpus.lookup.cislo' | transloco }}</label>
+    <input #lc id="jd-lc" type="text" data-testid="lookup-cislo" [placeholder]="'corpus.lookup.cisloPlaceholder' | transloco" />
+    <label for="jd-le">{{ 'corpus.lookup.ecli' | transloco }}</label>
+    <input #le id="jd-le" type="text" data-testid="lookup-ecli" [placeholder]="'corpus.lookup.ecliPlaceholder' | transloco" />
+    <button type="button" data-testid="lookup-go" (click)="store.findByNumber(lc.value, le.value)">{{ 'corpus.lookup.go' | transloco }}</button>
+    @if (store.byNumberActive()) {
+      <button type="button" data-testid="lookup-clear" (click)="store.clearByNumber()">{{ 'corpus.lookup.clear' | transloco }}</button>
+    }
+  </div>
+
+  @if (store.warnings().length > 0) {
+    <p class="notice" role="status" data-testid="corpus-warnings">{{ 'corpus.warnings' | transloco: { codes: store.warnings().join(', ') } }}</p>
+  }
+
+  @if (store.error(); as key) {
+    <p class="error" role="alert" data-testid="corpus-error">{{ key | transloco }} <span class="detail">{{ store.errorDetail() }}</span></p>
+  } @else if (store.loading() && store.rows().length === 0) {
+    <p data-testid="corpus-loading">{{ 'common.loading' | transloco }}</p>
+  } @else if (store.rows().length === 0) {
+    <p class="empty" data-testid="corpus-empty">{{ 'corpus.empty' | transloco }}</p>
+  } @else {
+    <ul class="results">
+      @for (item of store.rows(); track item.key) {
+        <li class="result" data-testid="corpus-row">
+          <div class="line">
+            <span class="badge" data-testid="corpus-court-badge">@if (courtKey(item.court); as key) {{{ key | transloco }}} @else {{{ item.court }}}</span>
+            <button type="button" class="link" data-testid="corpus-open" (click)="store.open(item)">{{ item.cislo }}</button>
+            @if (item.ecli) {
+              <span class="meta" data-testid="corpus-ecli">{{ item.ecli }}</span>
+            }
+            @if (item.datum) {
+              <span class="meta" data-testid="corpus-date">{{ item.datum | date: 'yyyy-MM-dd' : 'UTC' }}</span>
+            }
+            @if (item.kolegiumNazov) {
+              <span class="meta" data-testid="corpus-kolegium-name">{{ item.kolegiumNazov }}</span>
+            }
+            @if (item.pdf) {
+              <span class="badge" data-testid="corpus-pdf" [title]="'corpus.pdfBadgeHint' | transloco">{{ 'corpus.pdfBadge' | transloco }}</span>
+            }
+            @if (item.sourceUrl !== '') {
+              <a class="meta" data-testid="corpus-source" target="_blank" rel="noopener noreferrer" [href]="item.sourceUrl">{{ 'decision.sourceLink' | transloco }}</a>
+            }
+          </div>
+          @if (item.merito) {
+            <div class="merito" data-testid="corpus-merito">{{ item.merito }}</div>
+          }
+          @if (item.headline.length > 0) {
+            <p class="excerpt" data-testid="corpus-headline">
+              @for (part of item.headline; track $index) {
+                @if (part.mark) {
+                  <mark>{{ part.text }}</mark>
+                } @else {
+                  <span>{{ part.text }}</span>
+                }
+              }
+            </p>
+          }
+          @if (item.snippet) {
+            <p class="excerpt" data-testid="corpus-snippet">{{ item.snippet }}</p>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  @if (store.paged()) {
+    <nav class="pager" [attr.aria-label]="'common.pager' | transloco">
+      <button type="button" data-testid="corpus-prev" [disabled]="!store.hasPrevious()" (click)="store.previous()">{{ 'common.previous' | transloco }}</button>
+      <span data-testid="corpus-range">{{ 'common.range' | transloco: { from: store.from(), to: store.to(), total: store.count() } }}</span>
+      <button type="button" data-testid="corpus-next" [disabled]="!store.hasNext()" (click)="store.next()">{{ 'common.next' | transloco }}</button>
+    </nav>
+  }
+</section>
