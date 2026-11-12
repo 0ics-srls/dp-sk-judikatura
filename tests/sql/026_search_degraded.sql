@@ -7,4 +7,4 @@ SELECT id, 0, 'dovolanie', 'dovolanie', array_cat(ARRAY[1::real], array_fill(0::
 
 SELECT CAST(NULL AS vector) IS NULL
    AND (SELECT count(*) FROM passages ps WHERE ps.embedding <=> CAST(NULL AS vector) IS NOT NULL) = 0
-   AND (SELECT count(*) FROM rozhodnutia WHERE search_vector @@ websearch_to_tsquery('simple', 'dovolanie')) = 1 AS ok
+   AND (SELECT count(*) FROM rozhodnutia WHERE search_vector_sk @@ websearch_to_tsquery('sk_unaccent'::regconfig, 'dovolanie')) = 1 AS ok

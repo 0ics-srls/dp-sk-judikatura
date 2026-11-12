@@ -30,9 +30,9 @@ schema:
       - property: search
         value: fts
       - property: ftsField
-        value: search_vector
+        value: search_vector_sk
       - property: ftsConfig
-        value: simple
+        value: sk_unaccent
     properties:
       - name: id
         logicalType: string
@@ -110,7 +110,11 @@ schema:
       - name: search_vector
         logicalType: string
         physicalType: tsvector
-        description: Generated simple full-text vector over merito and text_raw
+        description: Legacy generated simple full-text vector (0.1.0 and 0.2.0), no longer read by any Tool
+      - name: search_vector_sk
+        logicalType: string
+        physicalType: tsvector
+        description: Generated sk_unaccent full-text vector (simple + unaccent, no stemming) over merito and text_raw
   - name: passages
     physicalName: passages
     description: Passages of a decision (what is embedded). The best passage per decision feeds the semantic search.
