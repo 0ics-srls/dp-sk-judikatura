@@ -1,0 +1,200 @@
+apiVersion: v3.2.0
+kind: DataContract
+id: urn:dataplatform:ds_sk_judikatura
+name: Slovak case law (Supreme Court of the Slovak Republic, OpenData nsud.sk)
+version: 0.1.0
+status: active
+domain: legal
+description:
+  purpose: Decisions of the Supreme Court of the Slovak Republic (Najvyssi sud SR) from the OpenData service of nsud.sk - estremi, full text (API text, PDF text layer or local OCR), full-text index and embeddable passages.
+  usage: Read through the Tools of the sk-judikatura package.
+  limitations: Supreme Court only (no lower courts, no Constitutional Court); decisions from 2005; decisions before about 2014 carry text only as a PDF attachment (text layer or OCR); the full-text configuration is simple (no stemming, no accent folding); decisions are anonymised by the Court, the package only counts shape hits; case law is not a source of law by itself.
+team:
+  name: 0ics data platform
+  members:
+    - username: operator
+      role: owner
+slaProperties:
+  - property: freshness
+    value: 30
+    unit: d
+    description: The Court publishes a few decisions a week; a monthly re-check is enough.
+customProperties:
+  - property: license
+    value: open-data-unnamed
+schema:
+  - name: rozhodnutia
+    physicalName: rozhodnutia
+    description: Decisions of the Supreme Court. Identity is (fonte, source_id); the ECLI is not unique and exists only from 2011. The full text is served by the rozhodnutie Tool in slices only.
+    customProperties:
+      - property: search
+        value: fts
+      - property: ftsField
+        value: search_vector
+      - property: ftsConfig
+        value: simple
+    properties:
+      - name: id
+        logicalType: string
+        physicalType: uuid
+        primaryKey: true
+      - name: fonte
+        logicalType: string
+        physicalType: text
+        description: Source family (nsud)
+      - name: source_id
+        logicalType: string
+        physicalType: text
+        description: Decision id in the nsud OpenData API
+      - name: court
+        logicalType: string
+        physicalType: text
+        description: NSSR (Najvyssi sud SR) or NSSSR (Najvyssi spravny sud SR), from the ECLI court code or the header line
+      - name: cislo
+        logicalType: string
+        physicalType: text
+        description: Case number as printed, for example 8Cdo/21/2014
+      - name: senat
+        logicalType: string
+        physicalType: text
+      - name: ecli
+        logicalType: string
+        physicalType: text
+        description: ECLI when the Court issued one (decisions after July 2011); not unique
+      - name: datum_rozhodnutia
+        logicalType: date
+        physicalType: date
+        description: Decision date
+      - name: kolegium
+        logicalType: string
+        physicalType: text
+        description: Chamber code of the source (1 civil, 2 commercial, 3 administrative, 4 criminal)
+      - name: kolegium_nazov
+        logicalType: string
+        physicalType: text
+        description: Chamber name mapped from the code
+      - name: merito
+        logicalType: string
+        physicalType: text
+        description: Subject of the decision (short legal summary line)
+      - name: sudca
+        logicalType: string
+        physicalType: text
+        description: Judge named in the header of the decision (public official acting in office); the only personal name column
+      - name: text_raw
+        logicalType: string
+        physicalType: text
+        description: Full text of the decision (API field, PDF text layer or local OCR)
+        customProperties:
+          - property: largeValue
+            value: true
+      - name: text_source
+        logicalType: string
+        physicalType: text
+        description: api, pdf or ocr
+      - name: source_url
+        logicalType: string
+        physicalType: text
+        description: Web page or PDF of the decision on nsud.sk
+      - name: pdf_url
+        logicalType: string
+        physicalType: text
+        description: PDF attachment when the Court published one
+      - name: pii_flags
+        logicalType: integer
+        physicalType: integer
+        description: Count of strings shaped like a birth number, IBAN, e-mail or phone number found in the text (counted, never blocking)
+      - name: ingested_at
+        logicalType: timestamp
+        physicalType: timestamptz
+      - name: search_vector
+        logicalType: string
+        physicalType: tsvector
+        description: Generated simple full-text vector over merito and text_raw
+  - name: passages
+    physicalName: passages
+    description: Passages of a decision (what is embedded). The best passage per decision feeds the semantic search.
+    customProperties:
+      - property: search
+        value: vector
+      - property: embeddingField
+        value: embedding
+      - property: embeddingModel
+        value: jina-embeddings-v3
+    properties:
+      - name: id
+        logicalType: integer
+        physicalType: bigint
+        primaryKey: true
+      - name: rozhodnutie_id
+        logicalType: string
+        physicalType: uuid
+        description: Parent rozhodnutia.id
+      - name: seq
+        logicalType: integer
+        physicalType: integer
+      - name: text
+        logicalType: string
+        physicalType: text
+        customProperties:
+          - property: largeValue
+            value: true
+      - name: text_contextual
+        logicalType: string
+        physicalType: text
+        description: Passage text prefixed with the estremi of the decision (what is embedded)
+        customProperties:
+          - property: largeValue
+            value: true
+      - name: embedding
+        logicalType: array
+        physicalType: vector(1024)
+  - name: skipped
+    physicalName: skipped
+    description: Items seen but not turned into a decision, with the reason.
+    properties:
+      - name: id
+        logicalType: integer
+        physicalType: bigint
+        primaryKey: true
+      - name: fonte
+        logicalType: string
+        physicalType: text
+      - name: item_ref
+        logicalType: string
+        physicalType: text
+      - name: reason
+        logicalType: string
+        physicalType: text
+      - name: seen_at
+        logicalType: timestamp
+        physicalType: timestamptz
+  - name: coverage
+    physicalName: coverage
+    description: Ids listed versus taken per decision-date window.
+    properties:
+      - name: id
+        logicalType: integer
+        physicalType: bigint
+        primaryKey: true
+      - name: fonte
+        logicalType: string
+        physicalType: text
+      - name: window_from
+        logicalType: date
+        physicalType: date
+      - name: window_to
+        logicalType: date
+        physicalType: date
+      - name: ids_listed
+        logicalType: integer
+        physicalType: integer
+      - name: ids_taken
+        logicalType: integer
+        physicalType: integer
+      - name: pdf_only
+        logicalType: integer
+        physicalType: integer
+      - name: noted_at
+        logicalType: timestamp
+        physicalType: timestamptz
