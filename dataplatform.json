@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
   "name": "sk-judikatura",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "hostApi": "1",
   "sources": [
     {
@@ -81,7 +81,7 @@
     },
     {
       "step": "grab",
-      "class": "git:github.com/0ics-srls/dp-sk-judikatura-grab@v0.1.0",
+      "class": "git:github.com/0ics-srls/dp-sk-judikatura-grab@v0.1.1",
       "perItem": true,
       "chunkSize": 1,
       "concurrencyLimit": 1,
@@ -164,8 +164,50 @@
       "produces": ["ds_sk_judikatura.passages"]
     }
   ],
+  "ui": {
+    "hostUiApi": "1",
+    "entry": "ui/dist/main.js",
+    "styles": ["ui/dist/styles.css"],
+    "menu": {
+      "label": { "sk": "Judikatúra SR", "en": "Slovak case law", "it": "Giurisprudenza slovacca" },
+      "icon": "pi pi-building",
+      "order": 140
+    },
+    "screens": [
+      {
+        "id": "corpus",
+        "element": "dp-sk-judikatura-corpus",
+        "label": { "sk": "Rozhodnutia", "en": "Decisions", "it": "Decisioni" },
+        "icon": "pi pi-list",
+        "default": true
+      },
+      {
+        "id": "decision",
+        "element": "dp-sk-judikatura-decision",
+        "label": { "sk": "Detail rozhodnutia", "en": "Decision detail", "it": "Dettaglio decisione" },
+        "icon": "pi pi-file"
+      },
+      {
+        "id": "status",
+        "element": "dp-sk-judikatura-status",
+        "label": { "sk": "Stav korpusu", "en": "Corpus status", "it": "Stato del corpus" },
+        "icon": "pi pi-chart-bar"
+      }
+    ],
+    "permissions": [
+      "tools:search",
+      "tools:lookup",
+      "tools:rozhodnutie",
+      "tools:status",
+      "navigate"
+    ]
+  },
   "releases": {
     "breakingChanges": {
+      "0.2.0": {
+        "message": "Screens added: decisions list with search, filters and lookup by case number, decision detail with text slices and the shape-guard badge, corpus status (Console menu Slovak case law); grab 0.1.1 stores the decision page URL; no Tool, column or table is changed, no data change",
+        "scopedImpact": "sk-judikatura UI, source_url of newly fetched decisions"
+      },
       "0.1.0": {
         "message": "Initial release: Supreme Court of the Slovak Republic decisions from the nsud.sk OpenData API (detect, grab by decision-date window, convert with PDF text and local OCR, ingest, embed), schema ds_sk_judikatura with 4 tables, 5 Tools (search, rozhodnutie, lookup, guide, status), no Screens yet",
         "scopedImpact": "new package"

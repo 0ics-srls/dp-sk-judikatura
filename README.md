@@ -66,7 +66,18 @@ decision answers no row instead of 404, the text comes in slices, PDF-only decis
 
 ## Release 0.1.0 and 0.2.0
 
-0.1.0 carries the data and the Tools, 0.2.0 adds the Screens (`ui/`).
+0.1.0 carries the data and the Tools, 0.2.0 adds the Screens (`ui/`, committed deterministic `ui/dist`, see `ui/BUILD-NOTES.md`) and pins grab 0.1.1 (stores the
+decision page URL).
+
+## Screens (Console menu "Slovak case law" / "Judikatúra SR" / "Giurisprudenza slovacca")
+
+| Screen | Element | Purpose |
+|---|---|---|
+| `corpus` (default) | `dp-sk-judikatura-corpus` | newest decisions with no search (`lookup`), search with filters (`search`), lookup by case number or ECLI |
+| `decision` | `dp-sk-judikatura-decision` | header, text slices (`rozhodnutie`), text source and shape-guard badges, PDF and source links; route `dec~<uuid>` |
+| `status` | `dp-sk-judikatura-status` | corpus coverage from the `status` Tool |
+
+The Screens call only `search`, `lookup`, `rozhodnutie` and `status`; labels exist in sk, en and it.
 
 ## Version history
 
