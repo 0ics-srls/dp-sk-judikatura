@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
+  "name": "sk-judikatura",
+  "version": "0.1.0",
+  "hostApi": "1",
+  "sources": [
+    {
+      "title": "Najvyssi sud Slovenskej republiky - OpenData (nsud.sk)",
+      "path": "https://www.nsud.sk/opendata/",
+      "licenses": [
+        {
+          "name": "open-data-unnamed",
+          "title": "NS SR OpenData page: free reuse for any purpose, no licence named; court decisions are outside copyright (art. 5 Act 185/2015)",
+          "path": "https://www.nsud.sk/opendata/"
+        }
+      ]
+    }
+  ],
+  "sourceTypes": [
+    {
+      "key": "nsud-decisions",
+      "title": "Supreme Court of the Slovak Republic decisions (OpenData API, by decision date)",
+      "configSchema": {
+        "type": "object",
+        "properties": {
+          "annoFrom": { "type": "integer", "minimum": 2005, "maximum": 2100, "default": 2005, "description": "First year of decision dates (the site holds nothing before 2005)" },
+          "annoTo": { "type": "integer", "minimum": 2005, "maximum": 2100, "description": "Last year of decision dates (default: the current year)" },
+          "ids": { "type": "array", "items": { "type": "string", "pattern": "^[0-9]{1,9}$" }, "maxItems": 50, "uniqueItems": true, "description": "Sample filter: explicit nsud decision ids (no window enumeration)" },
+          "maxDocs": { "type": "integer", "minimum": 1, "description": "Sample filter: stop after this many decisions per month" },
+          "includePdfOnly": { "type": "boolean", "default": true, "description": "Ingest decisions that only have a PDF attachment (text layer, OCR fallback)" },
+          "verifyTls": { "type": "boolean", "default": true },
+          "delaySeconds": { "type": "number", "minimum": 0.3, "default": 0.4 },
+          "baseUrl": { "type": "string", "default": "https://www.nsud.sk", "description": "Only change for a replay server" },
+          "refreshToken": { "type": "string" },
+          "tokenBudget": { "type": "integer", "minimum": 0, "default": 20000, "description": "Hard stop of Jina tokens per embedding Run" },
+          "dryRun": { "type": "boolean", "default": false, "description": "Embedding step plans only: no Jina call, nothing written" }
+        }
+      },
+      "x-ui": {
+        "order": ["annoFrom", "annoTo", "ids", "maxDocs", "includePdfOnly", "verifyTls", "delaySeconds", "baseUrl", "refreshToken", "tokenBudget", "dryRun"],
+        "labels": { "annoFrom": "From year", "annoTo": "To year", "ids": "Only these decision ids", "maxDocs": "Max decisions per month", "includePdfOnly": "Include PDF-only decisions", "verifyTls": "Verify TLS", "delaySeconds": "Pause between requests (s)", "baseUrl": "Base URL", "refreshToken": "Refresh token", "tokenBudget": "Embedding token budget", "dryRun": "Embedding dry run" },
+        "help": {
+          "annoFrom": "First year of decision dates; enumeration uses decision date windows (art_datrozh_*)",
+          "annoTo": "Last year of decision dates (default current year)",
+          "ids": "Sample filter: nsud decision ids, fetched one by one with no window call",
+          "maxDocs": "Sample filter for the live proof",
+          "includePdfOnly": "Decisions before about 2014 have no text in the API; the text comes from the PDF (OCR when it is a scan)",
+          "verifyTls": "Leave on",
+          "delaySeconds": "Pause between requests to the source, at least 0.3 s",
+          "baseUrl": "Only change for a replay server (host.docker.internal)",
+          "refreshToken": "Change this value to fetch all months again",
+          "tokenBudget": "Maximum Jina tokens one Run may spend on embeddings (default 20000)",
+          "dryRun": "Plan the embeddings without calling Jina"
+        }
+      }
+    }
+  ],
+  "catalog": {
+    "noveltyKey": "itemId|version",
+    "retryFailed": "newUrlOnly"
+  },
+  "dataset": {
+    "schema": "ds_sk_judikatura",
+    "migrations": "schema/migrations",
+    "contract": "serving/dataset.odcs.yaml"
+  }
+}
