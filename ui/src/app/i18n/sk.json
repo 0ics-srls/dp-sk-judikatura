@@ -14,7 +14,7 @@
     "title": "Judikatúra SR",
     "search": "Hľadať v rozhodnutiach",
     "searchPlaceholder": "napr. nahrada skody",
-    "noStemming": "Slovenské vyhľadávanie nemá lematizáciu ani zhodu diakritiky: skloňované tvary a slová napísané bez diakritiky sa nenájdu.",
+    "noStemming": "Slovenské vyhľadávanie zlučuje veľkosť písmen aj diakritiku (zalobca nájde žalobca), ale nemá lematizáciu: skloňované tvary sa nenájdu.",
     "mode": "Režim",
     "modes": { "hybrid": "hybridný", "lexical": "lexikálny", "semantic": "sémantický" },
     "modeShown": "Režim vyhľadávania: {{mode}}",

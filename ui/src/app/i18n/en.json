@@ -14,7 +14,7 @@
     "title": "Slovak case law",
     "search": "Search the decisions",
     "searchPlaceholder": "e.g. nahrada skody",
-    "noStemming": "Slovak search has no stemming and no accent folding: inflected forms and words typed without diacritics do not match.",
+    "noStemming": "Slovak search folds case and diacritics (zalobca finds žalobca) but has no stemming: inflected forms do not match.",
     "mode": "Mode",
     "modes": { "hybrid": "hybrid", "lexical": "lexical", "semantic": "semantic" },
     "modeShown": "Search mode: {{mode}}",

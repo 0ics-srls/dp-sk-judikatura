@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
   "name": "sk-judikatura",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "hostApi": "1",
   "sources": [
     {
@@ -204,6 +204,10 @@
   },
   "releases": {
     "breakingChanges": {
+      "0.2.2": {
+        "message": "Screens notice updated for sk_unaccent (diacritics are folded, still no stemming); rebuilt ui/dist; no Tool, column or data change",
+        "scopedImpact": "sk-judikatura Screens text"
+      },
       "0.2.1": {
         "message": "Full-text configuration sk_unaccent (simple + unaccent, D142): a query typed without diacritics now matches (zalobca finds žalobca); migration 0003 adds search_vector_sk (generated, GIN) next to the old search_vector, which stays unused; search, guide and status texts updated; no Tool parameter changes, no data change",
         "scopedImpact": "search results of sk-judikatura_search"

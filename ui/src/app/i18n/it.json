@@ -14,7 +14,7 @@
     "title": "Giurisprudenza slovacca",
     "search": "Cerca nelle decisioni",
     "searchPlaceholder": "es. nahrada skody",
-    "noStemming": "La ricerca slovacca non ha stemming né normalizzazione degli accenti: le forme flesse e le parole scritte senza diacritici non corrispondono.",
+    "noStemming": "La ricerca slovacca normalizza maiuscole e diacritici (zalobca trova žalobca) ma non ha stemming: le forme flesse non corrispondono.",
     "mode": "Modalità",
     "modes": { "hybrid": "ibrida", "lexical": "lessicale", "semantic": "semantica" },
     "modeShown": "Modalità di ricerca: {{mode}}",
