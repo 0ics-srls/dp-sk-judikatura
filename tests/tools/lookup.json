@@ -1,0 +1,5 @@
+{
+  "tool": "lookup",
+  "params": {},
+  "expect": { "minRows": 0, "maxRows": 50 }
+}
