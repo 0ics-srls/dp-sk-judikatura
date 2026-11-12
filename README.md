@@ -41,9 +41,23 @@ Decisions are published anonymised by the Court; the package adds no NER, it cou
 (`pii_flags`, never blocking). The judge named in the header (`sudca`) is kept: a public official acting in office. The OpenData page names no licence
 (licence entry `open-data-unnamed`): a public Grant waits for the user's decision. Case law is not a source of law by itself.
 
-## Tools
+## Tools (Gateway names `sk-judikatura_<tool>`)
 
-The five Tools (`search`, `rozhodnutie`, `lookup`, `guide`, `status`) arrive with release 0.1.0 (plan-b), the Screens with 0.2.0 (plan-c).
+| Tool | Purpose |
+|---|---|
+| `search` | hybrid search (simple full-text + best passage, RRF); filters `court`, `kolegium`, `datum_from`, `datum_to`; `mode` hybrid, lexical, semantic; `k` 1..50; no query lists the newest decisions |
+| `rozhodnutie` | one decision by `id`, `ecli` or `cislo` (exactly one), text in slices (`offset`, `length`, `next_offset`) |
+| `lookup` | structured list by extremes (replaces the never exposed branch-53 `query_judikatura`), paging with `total`, never the text |
+| `guide` | usage text for agents (Slovak, short Italian section) and the honest limits |
+| `status` | live coverage per court from the data (counts, years, text source mix, pending embeddings, skipped by reason, coverage windows) |
+
+`search` and `lookup` accept an empty call (a Screen opens with it). Generated Tools of the four tables never return `text_raw`, `text` or `text_contextual`
+(`largeValue`). Differences from the legacy `search_judikatura` / `get_rozhodnutie`: `mode`, `kolegium` and `k > 50` is an error instead of a clamp, an unknown
+decision answers no row instead of 404, the text comes in slices, PDF-only decisions exist here and not in the legacy (its reader rejected an empty `obsah`).
+
+## Release 0.1.0 and 0.2.0
+
+0.1.0 carries the data and the Tools, 0.2.0 adds the Screens (`ui/`).
 
 ## Version history
 
