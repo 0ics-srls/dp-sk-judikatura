@@ -1,0 +1,25 @@
+{
+  "description": "Search the case law of the Supreme Court of the Slovak Republic (NS SR, nsud.sk OpenData, from 2005). Hybrid mode fuses full-text (simple configuration over merito and text: no stemming and no accent folding, so inflected forms and words typed without diacritics do not match) and vector ranking over the passages with reciprocal rank fusion. Each hit gives the extremes (id, court, cislo, ecli, datum_rozhodnutia, kolegium_nazov, merito), a highlight (headline, only for a full-text match), a short snippet (best passage, at most 700 characters) and text_source (api, pdf or ocr); read the full text with sk-judikatura_rozhodnutie by id. Parameters: query (web-search syntax), k (1..50, default 10), mode (hybrid, lexical, semantic), filters court (NSSR or NSSSR), kolegium (1 civil, 2 commercial, 3 administrative, 4 criminal), datum_from and datum_to (decision date, YYYY-MM-DD). With no query the newest decisions are listed (a call without any parameter lists the first page). Case law is not a source of law by itself. Example: {\"query\": \"nahrada skody\", \"court\": \"NSSR\", \"datum_from\": \"2020-01-01\"}.",
+  "version": 1,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "maxLength": 1000,
+        "x-embed": { "into": "q_vec", "column": "passages.embedding", "model": "jina-embeddings-v3" }
+      },
+      "k": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10 },
+      "mode": { "type": "string", "enum": ["hybrid", "lexical", "semantic"], "default": "hybrid" },
+      "court": { "type": "string", "enum": ["NSSR", "NSSSR"] },
+      "kolegium": { "type": "integer", "minimum": 1, "maximum": 4 },
+      "datum_from": { "type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+      "datum_to": { "type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+    }
+  },
+  "annotations": { "readOnlyHint": true, "idempotentHint": true },
+  "maxRows": 50,
+  "maxBytes": 1048576,
+  "timeoutMs": 15000,
+  "pagination": "none"
+}
