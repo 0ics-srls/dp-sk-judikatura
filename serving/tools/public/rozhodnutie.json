@@ -1,0 +1,27 @@
+{
+  "description": "Read one decision of the Supreme Court of the Slovak Republic (NS SR) with its text in slices. Give exactly one key: id (uuid from sk-judikatura_search or sk-judikatura_lookup), ecli, or cislo (the case number as printed, for example 8Cdo/21/2014, written with its slash and not encoded). ecli and cislo can match several rows. Returns the extremes (court, cislo, senat, ecli, datum_rozhodnutia, kolegium, kolegium_nazov, merito, sudca), the text slice (offset 0-based, length 1..50000 characters, default 20000), text_length, truncated and next_offset (the offset of the next slice, null at the end), text_source (api = API text, pdf = PDF text layer, ocr = local OCR), pdf_url, source_url, pii_flags (strings shaped like personal data counted in the text; the Court anonymises before publication). No row means the decision is not in the corpus. Case law is not a source of law by itself. Example: {\"cislo\": \"8Cdo/21/2014\", \"offset\": 20000}.",
+  "version": 1,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      },
+      "ecli": { "type": "string", "maxLength": 100 },
+      "cislo": { "type": "string", "maxLength": 60 },
+      "offset": { "type": "integer", "minimum": 0, "default": 0 },
+      "length": { "type": "integer", "minimum": 1, "maximum": 50000, "default": 20000 }
+    },
+    "oneOf": [
+      { "required": ["id"] },
+      { "required": ["ecli"] },
+      { "required": ["cislo"] }
+    ]
+  },
+  "annotations": { "readOnlyHint": true, "idempotentHint": true },
+  "maxRows": 5,
+  "maxBytes": 1048576,
+  "timeoutMs": 10000,
+  "pagination": "none"
+}
