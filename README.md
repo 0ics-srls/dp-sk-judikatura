@@ -42,7 +42,7 @@ the item with `window_capped`).
 
 Classes (all `0ics-srls`, tag `v0.1.0`): `dp-sk-judikatura-detect`, `dp-sk-judikatura-grab`, `dp-sk-judikatura-convert`, `dp-sk-judikatura-ingest`; shared
 embed class `dp-lex-embed@dp-p7.1`. Full-text configuration `sk_unaccent` (simple + unaccent: diacritics folded, no stemming; migration 0003, the Host creates the `unaccent` extension, D142;
-the generated column is `search_vector_sk`, the old `search_vector` of 0.1.0 and 0.2.0 stays unused because migrations cannot drop: since 0.2.3 the contract declares it `largeValue` and unused, use `search_vector_sk`). A `mode=lexical` call does not embed the query (`x-embed.skipWhen`, since 0.2.3).
+the generated column is `search_vector_sk`, the old `search_vector` of 0.1.0 and 0.2.0 stays unused because migrations cannot drop: decision P84-14: since 0.2.3 the contract declares it `largeValue` and unused, use `search_vector_sk`). A `mode=lexical` call does not embed the query (`x-embed.skipWhen`, since 0.2.3).
 
 ## Posture and licence
 
