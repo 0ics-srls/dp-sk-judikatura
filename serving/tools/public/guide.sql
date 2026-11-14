@@ -21,6 +21,7 @@ POCTIVÉ LIMITY
 - Rozhodnutia anonymizuje súd pred zverejnením; balík nepoužíva NER, iba počíta reťazce tvaru rodné číslo, IBAN, e-mail a telefón (pii_flags) a nikdy ich nemaže ani neblokuje.
 - Licencia: stránka OpenData nepomenúva licenciu (voľné použitie na akýkoľvek účel); rozhodnutia súdov nie sú autorským dielom. Zdroj: nsud.sk OpenData.
 - Judikatúra nie je prameňom práva sama osebe; cituj značku a ECLI.
+- Stĺpec search_vector tabuľky rozhodnutia je nepoužívaný (ponechaný, lebo migrácie balíka sú len aditívne); fulltext používa search_vector_sk.
 
 SINTESI IN ITALIANO
 Corte suprema della Repubblica slovacca (Najvyšší súd, NS SR), dati aperti nsud.sk dal 2005. Strumenti: sk-judikatura_search (ricerca ibrida), sk-judikatura_rozhodnutie (testo a porzioni), sk-judikatura_lookup (elenco per estremi), sk-judikatura_status (copertura reale), sk-judikatura_guide. Limiti: solo la Corte suprema, niente giudici inferiori, FTS "simple" senza stemming, testo pre-2014 da PDF o OCR, anonimizzazione a cura della Corte. La giurisprudenza non e'' fonte di diritto.

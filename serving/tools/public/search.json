@@ -7,7 +7,7 @@
       "query": {
         "type": "string",
         "maxLength": 1000,
-        "x-embed": { "into": "q_vec", "column": "passages.embedding", "model": "jina-embeddings-v3" }
+        "x-embed": { "into": "q_vec", "column": "passages.embedding", "model": "jina-embeddings-v3", "skipWhen": { "parameter": "mode", "equals": ["lexical"] } }
       },
       "k": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10 },
       "mode": { "type": "string", "enum": ["hybrid", "lexical", "semantic"], "default": "hybrid" },

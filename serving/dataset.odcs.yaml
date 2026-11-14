@@ -110,7 +110,10 @@ schema:
       - name: search_vector
         logicalType: string
         physicalType: tsvector
-        description: Legacy generated simple full-text vector (0.1.0 and 0.2.0), no longer read by any Tool
+        description: Legacy simple full-text vector (0.1.0 and 0.2.0), unused and never returned; kept because package migrations are additive; use search_vector_sk
+        customProperties:
+          - property: largeValue
+            value: true
       - name: search_vector_sk
         logicalType: string
         physicalType: tsvector
