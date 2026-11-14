@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.dataplatform.0ics.ai/dataplatform/1.json",
   "name": "sk-judikatura",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "hostApi": "1",
   "sources": [
     {
@@ -204,6 +204,10 @@
   },
   "releases": {
     "breakingChanges": {
+      "0.2.3": {
+        "message": "search Tool declares x-embed.skipWhen on mode lexical: a lexical call no longer embeds the query (no Jina call); the unused tsvector column search_vector of rozhodnutia is declared largeValue (never returned by a generated Tool) and documented as unused (use search_vector_sk); Slovak guide and Screen strings checked for diacritics; no Tool is removed, no column removed, additive only",
+        "scopedImpact": "sk-judikatura_search, generated rozhodnutia Tools"
+      },
       "0.2.2": {
         "message": "Screens notice updated for sk_unaccent (diacritics are folded, still no stemming); rebuilt ui/dist; no Tool, column or data change",
         "scopedImpact": "sk-judikatura Screens text"
